@@ -1,0 +1,353 @@
+# =============================================================================
+# RATCHET MCP SERVER - Product Requirements Document
+# =============================================================================
+# Status: SKELETON - Blocked pending PointCare API documentation
+# Last Updated: 2024-12-22
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# PROJECT METADATA
+# -----------------------------------------------------------------------------
+project:
+  name: "ratchet-mcp"
+  version: "0.1.0"
+  description: |
+    MCP server for PointCare EMR integration. Enables Claude to document
+    patient visits directly into the Electronic Medical Records system,
+    reducing administrative burden for home health nurses.
+
+  sdk: "typescript"  # Aligns with Anthropic's reference implementation
+
+  repository:
+    url: "https://github.com/memyselfplusai/ratchet"  # TBD
+    branch: "main"
+
+  sprint:
+    grimlock_handoff: "2024-12-XX"  # TBD - after API docs acquired
+    grimlock_delivery: "2024-12-XX"  # TBD
+    week2_start: "2024-12-XX"        # TBD
+
+  deployment:
+    type: "local"
+    target: "claude-desktop"
+
+# -----------------------------------------------------------------------------
+# INTEGRATION TARGET
+# -----------------------------------------------------------------------------
+integration:
+  service_name: "PointCare EMR"
+  service_type: "api"
+  service_url: "https://www.pointcare.com"  # Main site - API URL TBD
+
+  api:
+    base_url: "[BLOCKED - Acquire from PointCare]"
+    documentation_url: "[BLOCKED - Need to request]"
+    version: "[BLOCKED - Unknown]"
+
+  auth:
+    type: "[BLOCKED - Likely OAuth2 or API Key]"
+    # Possible options:
+    # - api_key: Simple API key in header
+    # - oauth2: OAuth 2.0 flow
+    # - basic: Basic auth (unlikely for modern EMR)
+
+  rate_limits:
+    requests_per_minute: "[BLOCKED - Unknown]"
+    daily_limit: "[BLOCKED - Unknown]"
+
+# -----------------------------------------------------------------------------
+# MCP TOOLS - BLOCKED PENDING API DOCUMENTATION
+# -----------------------------------------------------------------------------
+tools:
+  - name: "search_patient"
+    description: |
+      Search for a patient in the PointCare EMR system.
+      Used to find patient records before creating visit notes.
+    status: "BLOCKED"
+    blocked_reason: "Awaiting PointCare API documentation"
+
+    parameters:
+      - name: "query"
+        type: "string"
+        required: true
+        description: "Patient name, ID, or phone number"
+      # Additional parameters TBD based on API
+
+    returns:
+      description: "List of matching patient records"
+      schema: "[BLOCKED - Need API response schema]"
+
+    examples:
+      - input:
+          query: "John Smith"
+        output: "[BLOCKED - Need sample response]"
+
+  - name: "create_visit_note"
+    description: |
+      Create a visit note for a patient in the PointCare EMR.
+      This is the primary tool for documenting home health visits.
+    status: "BLOCKED"
+    blocked_reason: "Awaiting PointCare API documentation"
+
+    parameters:
+      - name: "patientId"
+        type: "string"
+        required: true
+        description: "Patient identifier from search_patient"
+      - name: "note"
+        type: "string"
+        required: true
+        description: "Visit note content"
+      # Additional parameters TBD (visit date, visit type, etc.)
+
+    returns:
+      description: "Confirmation of created visit note"
+      schema: "[BLOCKED - Need API response schema]"
+
+    examples:
+      - input:
+          patientId: "PT-12345"
+          note: "Patient vitals stable. Blood pressure 120/80..."
+        output: "[BLOCKED - Need sample response]"
+
+  - name: "get_patient_history"
+    description: |
+      Retrieve visit history for a patient.
+      Useful for context before creating new visit notes.
+    status: "BLOCKED"
+    blocked_reason: "Awaiting PointCare API documentation"
+
+    parameters:
+      - name: "patientId"
+        type: "string"
+        required: true
+        description: "Patient identifier"
+      - name: "limit"
+        type: "number"
+        required: false
+        description: "Maximum number of records to return"
+        default: 10
+
+    returns:
+      description: "List of previous visit notes"
+      schema: "[BLOCKED - Need API response schema]"
+
+    examples:
+      - input:
+          patientId: "PT-12345"
+          limit: 5
+        output: "[BLOCKED - Need sample response]"
+
+# -----------------------------------------------------------------------------
+# MCP RESOURCES (Optional)
+# -----------------------------------------------------------------------------
+resources:
+  # TBD - May expose patient data as resources
+  # Example: patient://PT-12345 → patient details
+  status: "DEFERRED"
+  note: "Will evaluate after tools are implemented"
+
+# -----------------------------------------------------------------------------
+# MCP PROMPTS (Optional)
+# -----------------------------------------------------------------------------
+prompts:
+  - name: "visit_note_template"
+    description: "Standard template for home health visit documentation"
+    status: "PLANNED"
+    template: |
+      # Home Health Visit Note
+
+      **Patient:** {{patient_name}}
+      **Date:** {{visit_date}}
+      **Time In/Out:** {{time_in}} - {{time_out}}
+
+      ## Vital Signs
+      - Blood Pressure: {{bp}}
+      - Heart Rate: {{hr}}
+      - Temperature: {{temp}}
+      - O2 Saturation: {{o2sat}}
+
+      ## Assessment
+      {{assessment}}
+
+      ## Plan
+      {{plan}}
+
+      ## Next Visit
+      {{next_visit}}
+
+# -----------------------------------------------------------------------------
+# ACCEPTANCE CRITERIA
+# -----------------------------------------------------------------------------
+acceptance_criteria:
+  functional:
+    - id: "AC-F001"
+      description: "search_patient returns matching patients within 2 seconds"
+      status: "BLOCKED"
+
+    - id: "AC-F002"
+      description: "create_visit_note successfully creates note in PointCare"
+      status: "BLOCKED"
+
+    - id: "AC-F003"
+      description: "get_patient_history returns chronological visit list"
+      status: "BLOCKED"
+
+    - id: "AC-F004"
+      description: "All tools handle authentication errors gracefully"
+      status: "BLOCKED"
+
+    - id: "AC-F005"
+      description: "MCP server starts and responds to tool list request"
+      status: "TESTABLE"
+
+  non_functional:
+    - id: "AC-NF001"
+      description: "No PHI logged to console or files"
+      status: "PLANNED"
+
+    - id: "AC-NF002"
+      description: "API credentials stored securely (env vars only)"
+      status: "PLANNED"
+
+    - id: "AC-NF003"
+      description: "Response time < 3 seconds for all operations"
+      status: "BLOCKED"
+
+# -----------------------------------------------------------------------------
+# SECURITY REQUIREMENTS
+# -----------------------------------------------------------------------------
+security:
+  data_sensitivity: "HIGH"  # PHI/Healthcare data
+  compliance:
+    - "HIPAA considerations (handled by organization)"
+
+  credential_handling:
+    storage: "environment_variables"
+    rotation: "manual"  # TBD based on API auth type
+
+  logging:
+    - "No PHI in logs"
+    - "Audit trail for all EMR operations"
+    - "Error logging without sensitive data"
+
+  notes: |
+    HIPAA compliance infrastructure is the responsibility of the
+    deploying organization. This MCP server handles credentials
+    securely but does not implement full HIPAA compliance.
+
+# -----------------------------------------------------------------------------
+# TESTING REQUIREMENTS
+# -----------------------------------------------------------------------------
+testing:
+  unit_tests:
+    - description: "Tool parameter validation"
+      status: "PLANNED"
+    - description: "Response formatting"
+      status: "PLANNED"
+    - description: "Error handling"
+      status: "PLANNED"
+
+  integration_tests:
+    - description: "PointCare API connectivity"
+      status: "BLOCKED"
+      blocked_reason: "Requires sandbox credentials"
+    - description: "Full tool execution flow"
+      status: "BLOCKED"
+
+  manual_tests:
+    - description: "Claude Desktop integration"
+      status: "PLANNED"
+    - description: "n8n workflow integration"
+      status: "PLANNED"
+
+# -----------------------------------------------------------------------------
+# GRIMLOCK HANDOFF CHECKLIST
+# -----------------------------------------------------------------------------
+grimlock_handoff:
+  required_inputs:
+    - item: "This completed PRD"
+      status: "PENDING"
+      notes: "Skeleton complete, tools blocked"
+
+    - item: "PointCare API documentation"
+      status: "BLOCKED"
+      notes: "Must acquire from PointCare"
+
+    - item: "Sample API responses"
+      status: "BLOCKED"
+      notes: "Need for test fixtures"
+
+    - item: "Test/sandbox credentials"
+      status: "BLOCKED"
+      notes: "Required for integration tests"
+
+    - item: "Authentication method details"
+      status: "BLOCKED"
+      notes: "OAuth2, API Key, or other"
+
+  api_documentation:
+    available: false
+    location: "[BLOCKED]"
+    notes: "Need to contact PointCare for API access"
+
+  test_credentials:
+    available: false
+    sandbox_url: "[BLOCKED]"
+    notes: "Need sandbox environment"
+
+# -----------------------------------------------------------------------------
+# WEEK 2 REFINEMENT CHECKLIST
+# -----------------------------------------------------------------------------
+week2_refinement:
+  security_review:
+    - "Verify no PHI in logs"
+    - "Review credential handling"
+    - "Audit API request patterns"
+
+  integration_testing:
+    - "Test with real PointCare sandbox"
+    - "Verify error handling"
+    - "Test rate limit behavior"
+
+  documentation:
+    - "Update README with real configuration"
+    - "Document error codes"
+    - "Add troubleshooting guide"
+
+  deployment:
+    - "Claude Desktop integration test"
+    - "n8n workflow update (M2AI NurseCall)"
+    - "Production credential setup"
+
+# -----------------------------------------------------------------------------
+# SUCCESS METRICS
+# -----------------------------------------------------------------------------
+success_metrics:
+  - metric: "Time to document visit"
+    baseline: "15+ minutes (manual entry)"
+    target: "< 2 minutes (via Claude)"
+    status: "BLOCKED"
+
+  - metric: "Documentation completeness"
+    baseline: "Variable"
+    target: "100% required fields"
+    status: "BLOCKED"
+
+  - metric: "Nurse satisfaction"
+    baseline: "N/A"
+    target: "Positive feedback from Stacey"
+    status: "PENDING"
+
+# -----------------------------------------------------------------------------
+# RELATED PROJECTS
+# -----------------------------------------------------------------------------
+related_projects:
+  grimlock:
+    description: "Autonomous MCP Server Factory that will build Ratchet"
+    repository: "/home/ubuntu/projects/grimlock"
+
+  m2ai_nursecall:
+    description: "n8n workflow that will integrate with Ratchet"
+    workflow_id: "3i0JkX1GdDXnTQbx"
+    integration_point: "Replace email output with EMR entry"
