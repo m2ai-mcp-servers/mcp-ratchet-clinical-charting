@@ -1,0 +1,76 @@
+/**
+ * Configuration management for Ratchet MCP server
+ *
+ * Loads configuration from environment variables.
+ * In mock mode, API credentials are not required.
+ */
+
+export interface RatchetConfig {
+  // API Configuration
+  apiUrl: string;
+  apiKey: string;
+  clientId?: string;
+  clientSecret?: string;
+
+  // Runtime Configuration
+  mockMode: boolean;
+  logLevel: 'debug' | 'info' | 'warn' | 'error';
+
+  // Timeouts (ms)
+  requestTimeout: number;
+}
+
+/**
+ * Load configuration from environment variables
+ */
+export function loadConfig(): RatchetConfig {
+  const mockMode = process.env.RATCHET_MOCK_MODE === 'true' ||
+                   !process.env.POINTCARE_API_URL;
+
+  return {
+    // API settings - only required when not in mock mode
+    apiUrl: process.env.POINTCARE_API_URL || 'https://api.pointcare.com',
+    apiKey: process.env.POINTCARE_API_KEY || '',
+    clientId: process.env.POINTCARE_CLIENT_ID,
+    clientSecret: process.env.POINTCARE_CLIENT_SECRET,
+
+    // Runtime settings
+    mockMode,
+    logLevel: (process.env.LOG_LEVEL as RatchetConfig['logLevel']) || 'info',
+
+    // Timeouts
+    requestTimeout: parseInt(process.env.REQUEST_TIMEOUT || '30000', 10),
+  };
+}
+
+/**
+ * Validate configuration for production use
+ */
+export function validateConfig(config: RatchetConfig): string[] {
+  const errors: string[] = [];
+
+  if (!config.mockMode) {
+    if (!config.apiUrl) {
+      errors.push('POINTCARE_API_URL is required when not in mock mode');
+    }
+    if (!config.apiKey) {
+      errors.push('POINTCARE_API_KEY is required when not in mock mode');
+    }
+  }
+
+  return errors;
+}
+
+// Singleton config instance
+let configInstance: RatchetConfig | null = null;
+
+export function getConfig(): RatchetConfig {
+  if (!configInstance) {
+    configInstance = loadConfig();
+  }
+  return configInstance;
+}
+
+export function resetConfig(): void {
+  configInstance = null;
+}
