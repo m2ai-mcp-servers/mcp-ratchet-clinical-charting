@@ -1,6 +1,6 @@
-# Ratchet MCP
+# mcp-pointcare-ratchet
 
-**MCP server for PointCare EMR integration** - Enables Claude to document patient visits directly into Electronic Medical Records, reducing administrative burden for home health nurses.
+**MCP server for PointCare EMR integration (internal codename: Ratchet)** - Enables Claude to document patient visits directly into Electronic Medical Records, reducing administrative burden for home health nurses.
 
 ## Status
 
@@ -63,7 +63,7 @@ Ratchet runs in **mock mode** by default when `POINTCARE_API_URL` is not configu
 ### Step 1: Build the Project
 
 ```bash
-cd /path/to/ratchet
+cd /path/to/mcp-pointcare-ratchet
 npm install
 npm run build
 ```

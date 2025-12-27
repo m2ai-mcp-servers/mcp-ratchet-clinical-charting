@@ -1,5 +1,5 @@
 {
-  "name": "ratchet-mcp",
+  "name": "mcp-pointcare-ratchet",
   "version": "0.1.0",
   "description": "MCP server for PointCare EMR integration - enables Claude to document patient visits directly into EMR",
   "type": "module",
