@@ -120,10 +120,17 @@ async function main() {
   logger.info('Starting Ratchet MCP server', {
     version: '0.1.0',
     mockMode: config.mockMode,
+    supabaseEnabled: config.supabaseEnabled,
   });
 
   if (config.mockMode) {
     logger.warn('Running in MOCK MODE - no real API calls will be made');
+  }
+
+  if (config.supabaseEnabled) {
+    logger.info('Supabase integration ENABLED - visits will sync to dashboard');
+  } else {
+    logger.warn('Supabase integration DISABLED - check SUPABASE_URL and SUPABASE_ANON_KEY env vars');
   }
 
   const transport = new StdioServerTransport();
