@@ -12,6 +12,11 @@ export interface RatchetConfig {
   clientId?: string;
   clientSecret?: string;
 
+  // Supabase Configuration (for PointCare EMR Dashboard)
+  supabaseUrl?: string;
+  supabaseKey?: string;
+  supabaseEnabled: boolean;
+
   // Runtime Configuration
   mockMode: boolean;
   logLevel: 'debug' | 'info' | 'warn' | 'error';
@@ -27,12 +32,22 @@ export function loadConfig(): RatchetConfig {
   const mockMode = process.env.RATCHET_MOCK_MODE === 'true' ||
                    !process.env.POINTCARE_API_URL;
 
+  // Supabase is enabled if both URL and key are provided
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY;
+  const supabaseEnabled = !!(supabaseUrl && supabaseKey);
+
   return {
     // API settings - only required when not in mock mode
     apiUrl: process.env.POINTCARE_API_URL || 'https://api.pointcare.com',
     apiKey: process.env.POINTCARE_API_KEY || '',
     clientId: process.env.POINTCARE_CLIENT_ID,
     clientSecret: process.env.POINTCARE_CLIENT_SECRET,
+
+    // Supabase settings
+    supabaseUrl,
+    supabaseKey,
+    supabaseEnabled,
 
     // Runtime settings
     mockMode,

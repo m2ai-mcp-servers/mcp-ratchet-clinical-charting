@@ -17,6 +17,7 @@ import {
   generateVisitNoteId,
   getCurrentTimestamp,
 } from './mock-data.js';
+import { syncVisitToSupabase, isSupabaseEnabled } from './supabase-service.js';
 import type {
   Patient,
   PatientSearchParams,
@@ -274,12 +275,22 @@ export async function createVisitNote(
     // Add to mock database
     mockVisitNotes.push(visitNote);
 
+    // Sync to Supabase for dashboard display
+    if (isSupabaseEnabled()) {
+      const synced = await syncVisitToSupabase(visitNote);
+      if (synced) {
+        logger.info('Visit synced to Supabase dashboard', { visitId: visitNote.id });
+      } else {
+        logger.warn('Failed to sync visit to Supabase', { visitId: visitNote.id });
+      }
+    }
+
     logger.audit('create_visit_note', true, Date.now() - startTime);
 
     return {
       success: true,
       visitNoteId: visitNote.id,
-      message: `Visit note ${visitNote.id} created successfully for patient ${params.patientId}`,
+      message: `Visit note ${visitNote.id} created successfully for patient ${params.patientId}${isSupabaseEnabled() ? ' (synced to dashboard)' : ''}`,
       visitNote,
     };
   }
