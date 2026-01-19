@@ -1,12 +1,20 @@
 {
-  "name": "mcp-pointcare-ratchet",
+  "name": "mcp-ratchet-clinical-charting",
   "version": "0.1.0",
-  "description": "MCP server for PointCare EMR integration - enables Claude to document patient visits directly into EMR",
+  "description": "MCP server for clinical charting with Claude - document patient visits directly into EMR",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "mcp-ratchet-clinical-charting": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
+    "prepublishOnly": "npm run build",
     "dev": "tsx src/index.ts",
     "test": "jest",
     "lint": "eslint src/**/*.ts"
@@ -16,12 +24,22 @@
     "model-context-protocol",
     "anthropic",
     "claude",
-    "pointcare",
+    "clinical-charting",
     "emr",
-    "healthcare"
+    "healthcare",
+    "nursing"
   ],
   "author": "Matthew Snow <matthew@memyselfplusai.com>",
   "license": "MIT",
+  "mcpName": "io.github.m2ai-mcp-servers/mcp-ratchet-clinical-charting",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m2ai-mcp-servers/mcp-ratchet-clinical-charting.git"
+  },
+  "homepage": "https://github.com/m2ai-mcp-servers/mcp-ratchet-clinical-charting#readme",
+  "bugs": {
+    "url": "https://github.com/m2ai-mcp-servers/mcp-ratchet-clinical-charting/issues"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "@supabase/supabase-js": "^2.89.0"

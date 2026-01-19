@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.m2ai-mcp-servers/mcp-ratchet-clinical-charting",
+  "description": "MCP server for clinical charting with Claude - document patient visits to EMR",
+  "repository": {
+    "url": "https://github.com/m2ai-mcp-servers/mcp-ratchet-clinical-charting",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "mcp-ratchet-clinical-charting",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "POINTCARE_API_URL",
+          "description": "EMR API base URL (optional - runs in mock mode if not set)",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "POINTCARE_API_KEY",
+          "description": "EMR API key (required for production mode)",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

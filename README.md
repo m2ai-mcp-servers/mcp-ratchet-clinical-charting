@@ -1,6 +1,8 @@
-# mcp-pointcare-ratchet
+# mcp-ratchet-clinical-charting
 
-**MCP server for PointCare EMR integration (internal codename: Ratchet)** - Enables Claude to document patient visits directly into Electronic Medical Records, reducing administrative burden for home health nurses.
+**MCP server for clinical charting with Claude (codename: Ratchet)** - Enables Claude to document patient visits directly into Electronic Medical Records, reducing administrative burden for home health nurses.
+
+> **Note:** Currently runs in Mock Mode for development/testing. Production EMR integration coming soon.
 
 ## Status
 
@@ -15,18 +17,21 @@
 
 ## Quick Start
 
+### From npm (Recommended)
+
 ```bash
-# Install dependencies
+npx mcp-ratchet-clinical-charting
+```
+
+### From Source
+
+```bash
+git clone https://github.com/m2ai-mcp-servers/mcp-ratchet-clinical-charting.git
+cd mcp-ratchet-clinical-charting
 npm install
-
-# Build
 npm run build
-
-# Run in development mode
-npm run dev
-
-# Run tests
-npm test
+npm run dev  # Development mode
+npm test     # Run tests
 ```
 
 ## Mock Mode
@@ -60,15 +65,7 @@ Ratchet runs in **mock mode** by default when `POINTCARE_API_URL` is not configu
 
 ## Claude Desktop Integration
 
-### Step 1: Build the Project
-
-```bash
-cd /path/to/mcp-pointcare-ratchet
-npm install
-npm run build
-```
-
-### Step 2: Configure Claude Desktop
+### Configure Claude Desktop
 
 Add to your Claude Desktop config file:
 
@@ -79,21 +76,21 @@ Add to your Claude Desktop config file:
 {
   "mcpServers": {
     "ratchet": {
-      "command": "node",
-      "args": ["/absolute/path/to/ratchet/dist/index.js"]
+      "command": "npx",
+      "args": ["-y", "mcp-ratchet-clinical-charting"]
     }
   }
 }
 ```
 
-For mock mode, no environment variables are needed. For production:
+For production mode with EMR integration:
 
 ```json
 {
   "mcpServers": {
     "ratchet": {
-      "command": "node",
-      "args": ["/absolute/path/to/ratchet/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "mcp-ratchet-clinical-charting"],
       "env": {
         "POINTCARE_API_URL": "https://api.pointcare.com",
         "POINTCARE_API_KEY": "your-api-key"
@@ -213,8 +210,8 @@ npm run lint
 
 ## Related Projects
 
-- **Grimlock** - Autonomous MCP Server Factory (github.com/MatthewSnow2/grimlock)
-- **M2AI NurseCall** - n8n workflow (ID: 3i0JkX1GdDXnTQbx)
+- **[GRIMLOCK](https://github.com/m2ai-portfolio/grimlock)** - Autonomous MCP Server Factory
+- **[ratchet-demo-emr](https://github.com/m2ai-mcp-servers/ratchet-demo-emr)** - Demo EMR React app for testing
 
 ## License
 
@@ -222,4 +219,4 @@ MIT
 
 ---
 
-*Built autonomously by [GRIMLOCK](https://github.com/MatthewSnow2/grimlock) - Autonomous MCP Server Factory*
+*Built with [GRIMLOCK](https://github.com/m2ai-portfolio/grimlock) - Autonomous MCP Server Factory*
